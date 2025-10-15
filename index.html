@@ -362,17 +362,19 @@
     <script>
         // Data du quiz
         const questions = [
+            // Q1: Principe de formation
             {
                 question: "1. En droit civil québécois, quel est le principe fondamental dans la formation des contrats qui permet à une entente d'être valide par le seul échange de consentements, sans écrit spécifique ?",
                 options: ["A. La restitution des prestations.", "B. L’opposabilité des droits.", "C. Le consensualisme.", "D. Le formalisme contractuel."],
                 answer: 2,
                 rationales: [
-                    "La restitution des prestations est une conséquence de l'annulation ou de la résolution d'un contrat, pas un principe de formation.",
+                    "La restitution est une conséquence de l'annulation ou de la résolution d'un contrat, pas un principe de formation.",
                     "L’opposabilité des droits est un effet de la publicité des droits, et non un principe de base de la formation.",
                     "Le principe du consensualisme (art. 1385 C.c.Q.) stipule que l'échange des consentements suffit à la formation du contrat. C'est la règle générale en droit québécois.",
                     "Le formalisme est l'exception, et non le principe général. Il exige une forme spécifique (ex: écrit, notarié)."
                 ]
             },
+            // Q2: Distinction nullité
             {
                 question: "2. Quelle est la principale distinction entre la nullité relative et la nullité absolue en termes d'intérêt protégé ?",
                 options: ["A. La nullité relative protège un intérêt privé (une partie); la nullité absolue protège l'intérêt général (ordre public).", "B. La nullité relative peut être invoquée par tout intéressé; la nullité absolue seulement par la victime.", "C. La nullité relative sanctionne l'objet ou la cause illégale; la nullité absolue sanctionne les vices de consentement.", "D. La nullité relative s'applique aux contrats synallagmatiques; la nullité absolue aux contrats unilatéraux."],
@@ -384,6 +386,7 @@
                     "La distinction ne repose pas sur la nature du contrat (synallagmatique/unilatéral)."
                 ]
             },
+            // Q3: Clause externe
             {
                 question: "3. Dans un contrat de consommation ou d'adhésion au Québec, si une clause externe n'a pas été expressément portée à la connaissance de la partie adhérente, quelle est la sanction juridique de cette clause selon l'article 1435 C.c.Q. ?",
                 options: ["A. L’adhérent a droit à des dommages-intérêts punitifs contre l’auteur du contrat.", "B. La clause est frappée de nullité relative, et l’ensemble du contrat est annulé.", "C. La clause est susceptible d’une renégociation obligatoire.", "D. La clause est nulle et réputée non écrite."],
@@ -395,6 +398,7 @@
                     "La clause est nulle et réputée non écrite (art. 1435 C.c.Q.). C'est une sanction très forte qui la retire du contrat sans affecter le reste."
                 ]
             },
+            // Q4: Publicité des droits
             {
                 question: "4. Quelle est la raison pour laquelle la vente d'un immeuble (Art. 2938 C.c.Q.) doit généralement faire l'objet d'un acte notarié et d'une publicité au Registre foncier ?",
                 options: [
@@ -406,11 +410,12 @@
                 answer: 3,
                 rationales: [
                     "Le contrat d'adhésion est défini par sa nature (non négocié), et non par sa forme notariée.",
-                    "L'acte notarié est une formalité ad solemnitatem (pour la validité du titre translatif), et la publicité est pour l'opposabilité, pas seulement ad probationem (preuve).",
+                    "L'acte notarié est une formalité 'ad solemnitatem' (pour la validité du titre translatif), et la publicité est pour l'opposabilité, pas seulement 'ad probationem' (preuve).",
                     "La garantie des vices cachés est une obligation de fond de la vente, indépendante de la forme notariée et de la publicité.",
-                    "La publicité des droits (enregistrement) est essentielle pour rendre le droit de l'acheteur (droit de propriété) connu et opposable à tous les tiers. C'est la base de la sécurité foncière."
+                    "La publicité des droits (enregistrement) est essentielle pour rendre le droit de l'acheteur (droit de propriété) connu et opposable à tous les tiers (Art. 2941 C.c.Q.). C'est la base de la sécurité foncière."
                 ]
             },
+            // Q5: Contrat nommé
             {
                 question: "5. Qu'est-ce qui caractérise un contrat nommé en droit civil québécois (Art. 1377 C.c.Q.) ?",
                 options: [
@@ -427,6 +432,7 @@
                     "Le contrat nommé doit toujours respecter les règles générales du droit des obligations (le droit commun), en plus de ses règles spécifiques."
                 ]
             },
+            // Q6: Dol vs erreur inexcusable
             {
                 question: "6. Pourquoi le Dol permet-il d'obtenir la nullité, même si la victime aurait pu éviter l'erreur par une vérification simple (erreur inexcusable) ?",
                 options: [
@@ -443,6 +449,7 @@
                     "Le dol est un vice de consentement, sanctionné par la nullité relative."
                 ]
             },
+            // Q7: Erreur inexcusable définition
             {
                 question: "7. Une erreur inexcusable est une erreur qui...",
                 options: [
@@ -454,11 +461,12 @@
                 answer: 1,
                 rationales: [
                     "Ceci décrit une erreur simple (Art. 1400 C.c.Q.) qui est admissible si elle est excusable.",
-                    "Si l'erreur provient d'une négligence grossière de la victime, elle est considérée comme inexcusable et n'entraîne pas la nullité du contrat.",
+                    "Si l'erreur provient d'une négligence grossière de la victime (Art. 1400 al. 2 C.c.Q.), elle est considérée comme inexcusable et n'entraîne pas la nullité du contrat.",
                     "Si l'erreur est provoquée par le dol, elle est toujours admissible, peu importe son caractère 'inexcusable'.",
                     "Ceci décrit une erreur indifférente, qui n'affecte pas la validité du contrat."
                 ]
             },
+            // Q8: Conséquences nullité relative
             {
                 question: "8. Quelles sont les conséquences d'un contrat frappé d'une nullité relative ?",
                 options: [
@@ -471,10 +479,11 @@
                 rationales: [
                     "Ceci décrit la nullité absolue (Art. 1418 C.c.Q.).",
                     "La nullité relative (ex. vice de consentement) est instituée dans l'intérêt privé et est donc susceptible d'être couverte par la confirmation de la partie lésée (art. 1419, 1420 C.c.Q.).",
-                    "La nullité entraîne l'annulation rétroactive du contrat et la restitution des prestations, pas seulement des dommages-intérêts.",
-                    "La restitution est une conséquence de la nullité, mais la distinction essentielle de la relative est son caractère privé et confirmable."
+                    "La nullité entraîne l'annulation rétroactive du contrat et la restitution des prestations, mais la distinction essentielle de la relative est son caractère privé et confirmable.",
+                    "La restitution est une conséquence de la nullité, mais la nullité relative peut être couverte par la confirmation et n'est pas obligatoirement prononcée."
                 ]
             },
+            // Q9: Contrat de mandat
             {
                 question: "9. Un contrat de mandat (Art. 2130 C.c.Q.) est une entente par laquelle :",
                 options: [
@@ -491,6 +500,7 @@
                     "Ceci décrit le contrat de louage (bail)."
                 ]
             },
+            // Q10: Conditions essentielles 1385 C.c.Q.
             {
                 question: "10. Quelles sont les conditions essentielles à la formation valide d'un contrat selon l'article 1385 C.c.Q. ?",
                 options: ["A. La capacité de contracter, le droit de propriété, un prix, et la publicité du contrat.", "B. Le consentement (libre et éclairé), la capacité de contracter, un objet et une cause.", "C. La preuve écrite, l’absence de dol, la capacité des parties, et l’objet de l’obligation.", "D. Le consentement, la capacité, la forme solennelle et la clause pénale."],
@@ -500,6 +510,126 @@
                     "L'article 1385 C.c.Q. énonce ces quatre conditions : Consentement, Capacité, Objet et Cause.",
                     "La preuve écrite n'est pas essentielle à la formation (principe du consensualisme). L'absence de dol est liée à la qualité du consentement.",
                     "La forme solennelle n'est requise que pour les contrats solennels (exception)."
+                ]
+            },
+            // NOUVEAU Q11: Sanction commune vices de consentement
+            {
+                question: "11. Quelle est la sanction commune à tous les vices de consentement (erreur, dol, crainte, lésion) en droit québécois ?",
+                options: ["A. L’octroi obligatoire de dommages-intérêts punitifs.", "B. La nullité relative du contrat.", "C. La résiliation du contrat pour l’avenir.", "D. La nullité absolue."],
+                answer: 1,
+                rationales: [
+                    "Les dommages-intérêts punitifs sont rares et ne sont pas la sanction principale.",
+                    "Les vices de consentement, protégeant l'intérêt d'une partie, sont sanctionnés par la nullité relative (Art. 1419 C.c.Q.).",
+                    "La résiliation s'applique aux contrats à exécution successive (louage, travail) et ne concerne que les effets futurs, pas la formation.",
+                    "La nullité absolue sanctionne l'intérêt public."
+                ]
+            },
+            // NOUVEAU Q12: Caractérisation du dol
+            {
+                question: "12. Le dol (fraude) est un vice de consentement qui se caractérise par :",
+                options: ["A. L’emploi de manœuvres, de mensonges ou d’une réticence dans l’intention de tromper le cocontractant (art. 1401 C.c.Q.)", "B. La contrainte physique ou morale exercée par un tiers.", "C. Une disproportion monétaire significative entre les prestations.", "D. Le fait qu’une clause externe n’ait pas été portée à la connaissance de l’adhérent."],
+                answer: 0,
+                rationales: [
+                    "Le dol est une erreur provoquée par des manœuvres, des mensonges ou une réticence (silence) dans l’intention de tromper.",
+                    "Ceci caractérise la crainte (violence).",
+                    "Ceci caractérise la lésion (déséquilibre économique).",
+                    "Ceci est une sanction légale spécifique pour les clauses externes (Art. 1435 C.c.Q.)."
+                ]
+            },
+            // NOUVEAU Q13: Disponibilité de la lésion
+            {
+                question: "13. La lésion (déséquilibre économique) est-elle un vice de consentement généralement disponible à toutes les parties au contrat ?",
+                options: ["A. Non, elle est seulement disponible aux mineurs et aux majeurs protégés (art. 1405 C.c.Q.).", "B. Non, elle n’est disponible qu’aux consommateurs dans tous les contrats de consommation.", "C. Oui, tout le monde peut l’invoquer si la disproportion est prouvée.", "D. Oui, mais seulement dans les contrats à titre gratuit."],
+                answer: 0,
+                rationales: [
+                    "En droit commun, la lésion ne peut être invoquée que par le mineur et le majeur protégé. Elle ne s'applique pas généralement aux majeurs capables (Art. 1405 C.c.Q.).",
+                    "La LPC permet aux consommateurs d'invoquer la lésion, mais l'affirmation 'dans tous les contrats de consommation' est trop générale.",
+                    "Ceci est faux, c'est une exception en droit québécois.",
+                    "La lésion peut s'appliquer aux contrats à titre onéreux ou gratuit, mais seulement si la loi le permet (mineurs, majeurs protégés, consommateurs)."
+                ]
+            },
+            // NOUVEAU Q14: Crainte affecte quel caractère du consentement
+            {
+                question: "14. La crainte (violence) vicie le consentement en affectant le caractère :",
+                options: ["A. Éclairé du consentement.", "B. Personnel du consentement.", "C. Libre du consentement.", "D. Écrit du consentement."],
+                answer: 2,
+                rationales: [
+                    "L'erreur et le dol affectent le caractère éclairé (informé).",
+                    "Le consentement est toujours personnel, mais n'est pas nécessairement un aspect vicié.",
+                    "La crainte (menace, violence) force la volonté de la partie, enlevant le caractère libre du consentement (Art. 1402 C.c.Q.).",
+                    "Le consentement n'a pas besoin d'être écrit pour être valide (principe du consensualisme)."
+                ]
+            },
+            // NOUVEAU Q15: Erreur affecte quel caractère du consentement
+            {
+                question: "15. Quel aspect du consentement est vicié par l’erreur ?", 
+                options: ["A. Le consentement n'est pas libre.", "B. Le consentement n'est pas éclairé.", "C. Le consentement est absent.", "D. Le consentement est forcé physiquement."],
+                answer: 1,
+                rationales: [
+                    "Le caractère libre est vicié par la crainte.",
+                    "L'erreur signifie que le contractant s'est trompé sur l'objet ou les motifs déterminants, son consentement n'était donc pas éclairé (Art. 1400 C.c.Q.).",
+                    "L'absence de consentement mène à la nullité absolue.",
+                    "Ceci est une forme de crainte (violence physique)."
+                ]
+            },
+            // NOUVEAU Q16: Cause illégale
+            {
+                question: "16. La cause d’un contrat devient illégale lorsque :",
+                options: ["A. Elle est prohibée par la loi ou contraire à l’ordre public", "B. Elle n’est pas écrite dans le contrat", "C. Elle est mal comprise par une partie", "D. Elle n’a pas d’objet"],
+                answer: 0,
+                rationales: [
+                    "La cause (motif déterminant de s'engager) doit être licite. Si elle est contraire à l'ordre public ou à une loi prohibitive, elle est illégale (Art. 1411 C.c.Q.).",
+                    "Le consensualisme fait que la cause n'a pas besoin d'être écrite.",
+                    "Ceci pourrait mener à une erreur (vice de consentement), mais pas nécessairement à l'illégalité.",
+                    "L'objet et la cause sont deux conditions distinctes de formation (Art. 1385 C.c.Q.)."
+                ]
+            },
+            // NOUVEAU Q17: Exemple de cause illégale
+            {
+                question: "17. Quelle situation présente une cause illégale ?",
+                options: ["A. Prêt pour acheter une voiture d’occasion", "B. Prêt pour acheter de la drogue", "C. Vente d’un terrain", "D. Bail commercial"],
+                answer: 1,
+                rationales: [
+                    "L'achat d'une voiture est licite.",
+                    "Le motif déterminant (cause subjective) d'acheter des substances illégales est contraire à l'ordre public, rendant le contrat nul (nullité absolue).",
+                    "La vente d'un terrain est licite.",
+                    "Le bail commercial est licite."
+                ]
+            },
+            // NOUVEAU Q18: Exemple d'objet illégal
+            {
+                question: "18. Quelle situation présente un objet illégal ?",
+                options: ["A. Vente d’un bien immobilier", "B. Contrat de travail avec salaire minimum", "C. Vente d’un organe humain", "D. Contrat de location résidentielle"],
+                answer: 2,
+                rationales: [
+                    "C'est un objet licite (sauf si le bien est hors commerce pour une autre raison).",
+                    "Ceci est licite.",
+                    "L'objet de la prestation (l'organe) est hors du commerce juridique et contraire à l'ordre public, rendant le contrat nul (Art. 1412 C.c.Q.).",
+                    "Ceci est licite."
+                ]
+            },
+            // NOUVEAU Q19: Caractérisation de l'erreur simple
+            {
+                question: "19. L’erreur simple est un vice de consentement qui se caractérise par :",
+                options: ["A. La contrainte physique ou morale exercée par un tiers.", "B. Le mensonge ou la rétention d’information.", "C. Une fausse représentation de la réalité.", "D. La capacité du cocontractant."],
+                answer: 2,
+                rationales: [
+                    "Ceci caractérise la crainte.",
+                    "Ceci caractérise le dol (intention de tromper).",
+                    "L'erreur est une fausse représentation (fausse croyance) portant sur un élément essentiel du contrat (Art. 1400 C.c.Q.).",
+                    "La capacité est une condition de formation, pas un vice du consentement."
+                ]
+            },
+            // NOUVEAU Q20: Dol et tiers
+            {
+                question: "20. Selon l’article 1401 C.c.Q., le dol peut-il provenir d’une personne autre que l’autre partie contractante ?",
+                options: ["A. Non, le dol doit toujours venir de l’autre partie", "B. Oui, si la tromperie cause une erreur déterminante", "C. Oui, mais seulement en cas de violence", "D. Non, sauf si la lésion est prouvée"],
+                answer: 1,
+                rationales: [
+                    "L'article 1401 al. 2 C.c.Q. stipule que le dol peut être le fait d'un tiers.",
+                    "L'article 1401 al. 2 C.c.Q. précise que le dol du tiers vicie le consentement si l'autre partie était au courant (ce qui est le cas le plus courant) ou si la tromperie est déterminante et connue du bénéficiaire.",
+                    "Ceci concerne la crainte, pas le dol.",
+                    "La lésion est un vice distinct."
                 ]
             }
         ];
@@ -567,11 +697,12 @@
                             classes += ' selected-incorrect';
                             icon = '&#10006;';
                         }
+                        // La rationale s'affiche uniquement pour la réponse sélectionnée
                         rationaleHtml = `<div class="rationale-text">${rationaleText}</div>`;
                     }
-                    // Si on est en mode révision, on peut montrer la bonne réponse manquée
+                    // Si on est en mode révision, on peut aussi montrer la bonne réponse si elle n'a pas été choisie
                     else if (isReviewMode && isCorrect) {
-                         // Optionnel : style la bonne réponse si manquée en mode révision
+                         // Optionnel : ne pas styler la bonne réponse si elle est manquée, mais garder la logique pour le feedback de la mauvaise réponse ci-dessus.
                     }
                 }
                 
@@ -645,7 +776,7 @@
             const finalScore = calculateScore();
             const totalQuestions = questions.length;
             
-            // 1. Rendre le contenu DANS le bloc blanc (SANS l'image Nyan Cat)
+            // 1. Rendre le contenu DANS le bloc blanc
             quizContainer.innerHTML = `
                 <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 250px;">
                     <h2 style="text-align: center; margin-bottom: 20px; font-size: 1.8em;">Quiz Terminé !</h2>
@@ -655,7 +786,7 @@
                     </p>
                     
                     <p style="margin-bottom: 0px; margin-top: 20px; color: #4A5568; font-weight: 600;">
-                        Continuez de réviser pour maîtriser le droit des contrats !
+                        Continuez de réviser pour maîtriser le droit des contrats ! ⚖️ 
                     </p>
                 </div>
             `;
@@ -690,7 +821,7 @@
 
             // Bouton Suivant
             if (currentQuestionIndex === questions.length - 1) {
-                nextBtn.textContent = (quizMode === 'quiz') ? 'Terminer le Quiz' : 'Fin de la Révision';
+                nextBtn.textContent = (quizMode === 'quiz') ? 'Terminer le quiz' : 'Fin de la Révision';
             } else {
                 nextBtn.textContent = 'Suivant';
             }
