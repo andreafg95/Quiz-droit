@@ -23,6 +23,48 @@ button {
   cursor: pointer;
 }
 
+button {
+  /* Affichage en ligne */
+  display: inline-block; /* Permet aux boutons d'être côte à côte */
+  width: 48%;            /* Prend presque la moitié de la largeur du conteneur, laissant de l'espace */
+  
+  /* Retirer le margin-top qui peut créer trop d'espace pour des boutons côte à côte */
+  margin: 10px 1%;       /* Espacement horizontal entre les boutons */
+  
+  /* Mise en forme de base (similaire à ce que nous avions, mais adapté) */
+  padding: 15px 20px;    
+  background: #EBF5FF;   /* Fond bleu très clair, ou #F7F9FA pour presque blanc */
+  color: #007BFF;        /* Texte bleu clair (ou #34495E pour gris foncé) */
+  font-size: 17px;
+  font-weight: 600;      /* Texte un peu plus épais */
+  text-align: center;    /* Centrer le texte dans le bouton */
+  border: 2px solid #007BFF; /* Bordure plus visible et colorée */
+  border-radius: 12px;   /* Coins bien arrondis */
+  cursor: pointer;
+  
+  /* Transition pour la douceur des effets */
+  transition: all 0.3s ease;
+  
+  /* Ombre subtile */
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.1); /* Ombre douce et bleue */
+}
+
+/* Effet de survol (Hover) */
+#quiz button:hover {
+  background: #007BFF;      /* Fond bleu au survol */
+  color: white;             /* Texte blanc au survol */
+  border-color: #0056b3;    /* Bordure bleu foncé */
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.25); /* Ombre légèrement plus prononcée */
+  transform: translateY(-2px); /* Léger soulèvement */
+}
+
+/* Effet de clic (Active/Enfoncé) */
+#quiz button:active {
+  background: #0056b3;      /* Bleu plus foncé au clic */
+  transform: translateY(0); /* Retour à la position normale */
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1); /* Ombre réduite */
+}
+
 button:hover {
   background: #0056b3;
 }
