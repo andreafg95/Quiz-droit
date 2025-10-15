@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz : Formation des contrats en droit civil québécois</title>
+    <title>Quiz : Règles de formation des contrats en droit civil québécois</title>
     <style>
         /* --- Styles Généraux (Thème CLAIR & NEUTRE) --- */
 
@@ -42,7 +42,7 @@
             background: #FFFFFF; /* Conteneur blanc */
             border-radius: 12px;
             padding: 30px;
-            margin: 30px auto;
+            margin: 30px auto 10px auto; /* Ajusté la marge du bas pour l'espace du bouton */
             width: 100%;
             max-width: 650px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre légère */
@@ -197,7 +197,7 @@
         }
 
 
-        /* --- Styles de Navigation et Révision (Inchangés) --- */
+        /* --- Styles de Navigation et Révision --- */
 
         #navigation-buttons {
             max-width: 650px;
@@ -249,7 +249,7 @@
             transform: translateY(-1px);
         }
         
-        /* Bouton désactivé */
+        /* Bouton désactivé (sera ignoré pour 'next', mais conservé pour 'prev' si nécessaire) */
         #next:disabled, #prev:disabled, .option-btn:disabled {
             background: #ADB5BD !important; 
             color: #F8F9FA;
@@ -257,35 +257,43 @@
             transform: none;
             opacity: 0.9;
         }
-
-
-        /* Style pour le bouton de révision (apparaît seul à la fin) */
-        #review-btn {
-            background: #4A5568;
-            color: white;
-            margin: 0 auto;
-            display: block !important;
-        }
         
-        #review-btn:hover {
-            background: #2D3748;
+        /* Style pour le bouton de révision DÉPLACÉ EN DEHORS DU BLOC BLANC */
+        #review-btn-container {
+            max-width: 650px;
+            width: 100%;
+            margin: 10px auto 30px auto; /* Ajout d'une marge au-dessus et en dessous */
+            text-align: center;
         }
-
-        /* Image de fin */
-        #quiz img {
-            max-width: 100%;
-            height: auto;
-            display: block;
-            margin: 20px auto 0 auto;
+        #review-btn {
+            background: #007BFF;
+            color: white;
+            border: none;
+            font-weight: 700;
+            width: 250px; /* Largeur fixe */
+            padding: 15px 30px;
             border-radius: 8px;
+            font-size: 1em;
+            transition: background 0.2s ease, transform 0.1s;
+            cursor: pointer;
+            text-align: center; /* Assure que le texte du bouton est centré */
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+            display: block;
+            margin: 0 auto;
         }
 
+        #review-btn:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
 
+        /* Suppression des styles pour l'image Nyan Cat */
+        
         /* Media Queries pour la Responsivité Mobile */
         @media (max-width: 600px) {
             #quiz {
                 padding: 20px 15px;
-                margin: 15px auto;
+                margin: 15px auto 10px auto;
             }
             #quiz h2 {
                 font-size: 1.1em;
@@ -321,22 +329,33 @@
                 width: 100%;
                 padding: 10px 15px;
             }
+            
+            #review-btn {
+                width: 80%;
+                padding: 12px 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Quiz : Règles de formation des contrats en droit civil québécois</h1>
+    <h1>Quiz : Formation des contrats en droit civil québécois</h1>
     
     <div id="score"></div>
     <div id="quiz">
         <!-- Les questions et options seront chargées ici par JavaScript -->
     </div>
+    
+    <!-- CONTENEUR DU BOUTON DE RÉVISION DÉPLACÉ HORS DU BLOC BLANC -->
+    <div id="review-btn-container">
+        <!-- Le bouton sera inséré ici par JavaScript si quizMode = 'result' -->
+    </div>
+
     <div id="navigation-buttons">
         <div class="nav-group">
             <button id="prev">Précédent</button>
         </div>
         <div class="nav-group">
-            <button id="next" disabled>Suivant</button>
+            <button id="next">Suivant</button>
         </div>
     </div>
 
@@ -496,9 +515,11 @@
         // Éléments du DOM
         const quizContainer = document.getElementById('quiz');
         const scoreDisplay = document.getElementById('score');
-        const prevBtn = document.getElementById('prev');
-        const nextBtn = document.getElementById('next');
+        let prevBtn = document.getElementById('prev');
+        let nextBtn = document.getElementById('next');
         const navButtons = document.getElementById('navigation-buttons');
+        const reviewBtnContainer = document.getElementById('review-btn-container');
+
 
         // --- Fonctions d'Affichage ---
 
@@ -603,9 +624,9 @@
             //    - Afficher le feedback sur l'option sélectionnée.
             //    - Retirer le feedback de l'option précédemment sélectionnée (si elle existe).
             renderQuestion();
-
-            // 3. Activer le bouton Suivant
-            nextBtn.disabled = false;
+            
+            // 3. Le bouton Suivant est toujours actif, mais la mise à jour des boutons le re-vérifie
+            updateNavigationButtons();
         }
         
         function calculateScore() {
@@ -623,24 +644,29 @@
         function renderResults() {
             const finalScore = calculateScore();
             const totalQuestions = questions.length;
-            const percentage = Math.round((finalScore / totalQuestions) * 100);
-
+            
+            // 1. Rendre le contenu DANS le bloc blanc (SANS l'image Nyan Cat)
             quizContainer.innerHTML = `
-                <div style="text-align: center;">
-                    <h2>Quiz terminé !</h2>
+                <div style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 250px;">
+                    <h2 style="text-align: center; margin-bottom: 20px; font-size: 1.8em;">Quiz Terminé !</h2>
+
                     <p style="font-size: 1.2em; margin-bottom: 10px;">
-                        Votre score final : <strong>${finalScore}/${totalQuestions}</strong>
+                        Votre score finale : <strong>${finalScore}/${totalQuestions}</strong>
                     </p>
-                    <p style="margin-bottom: 30px; color: #4A5568;">
+                    
+                    <p style="margin-bottom: 0px; margin-top: 20px; color: #4A5568; font-weight: 600;">
                         Continuez de réviser pour maîtriser le droit des contrats !
                     </p>
-                    <button id="review-btn" class="option-btn" style="width: 250px; background: #4A5568; color: white; display: block; margin: 0 auto; border: none; font-weight: 700;">
-                        Revoir mes réponses
-                    </button>
-                    <!-- Image de félicitations -->
-                    <img src="https://placehold.co/400x200/4A5568/FFFFFF?text=Félicitations+!%0ARevoyez+vos+réponses" alt="Image de fin de quiz">
                 </div>
             `;
+            
+            // 2. Rendre le bouton de révision DANS le conteneur gris (review-btn-container)
+            reviewBtnContainer.innerHTML = `
+                <button id="review-btn">
+                    Revoir mes réponses
+                </button>
+            `;
+            
             scoreDisplay.textContent = '';
             navButtons.innerHTML = ''; // Cacher les boutons de navigation standard
 
@@ -669,14 +695,8 @@
                 nextBtn.textContent = 'Suivant';
             }
             
-            // Gestion de l'état du bouton Suivant
-            if (quizMode === 'quiz') {
-                // En mode quiz, désactivé si pas encore tenté (sélectionné)
-                nextBtn.disabled = userAnswers[currentQuestionIndex] === null; 
-            } else {
-                 // En mode révision, toujours actif pour naviguer
-                nextBtn.disabled = false;
-            }
+            // Le bouton Suivant est TOUJOURS actif en mode quiz et révision (version demandée)
+            nextBtn.disabled = false;
         }
 
         // --- Fonctions de Navigation ---
@@ -689,6 +709,8 @@
         }
 
         function handleNext() {
+            // Dans cette version, on peut avancer même si on n'a pas répondu.
+            // On vérifie si c'est la dernière question
             if (currentQuestionIndex < questions.length - 1) {
                 currentQuestionIndex++;
                 renderQuestion();
@@ -702,8 +724,11 @@
             quizMode = 'review';
             currentQuestionIndex = 0; // Commencer au début pour la révision
             
-            // Reconstruire l'UI avec les boutons de navigation (si cachés)
-            if (!document.getElementById('prev') || !document.getElementById('next')) {
+            // Vider le conteneur du bouton de révision
+            reviewBtnContainer.innerHTML = ''; 
+            
+            // Reconstruire l'UI avec les boutons de navigation
+            if (navButtons.innerHTML === '') {
                  navButtons.innerHTML = `
                     <div class="nav-group">
                         <button id="prev">Précédent</button>
@@ -712,21 +737,14 @@
                         <button id="next">Suivant</button>
                     </div>
                 `;
-                // Réattacher les listeners
-                document.getElementById('prev').addEventListener('click', handlePrev);
-                document.getElementById('next').addEventListener('click', handleNext);
+                // Réattacher les références et les listeners
+                prevBtn = document.getElementById('prev');
+                nextBtn = document.getElementById('next');
+            
+                prevBtn.addEventListener('click', handlePrev);
+                nextBtn.addEventListener('click', handleNext);
             }
 
-            // Mettre à jour les références aux boutons après reconstruction si nécessaire
-            const newPrevBtn = document.getElementById('prev');
-            const newNextBtn = document.getElementById('next');
-            
-            // Assurez-vous que les événements sont attachés aux nouveaux boutons
-            if (newPrevBtn && newNextBtn) {
-                newPrevBtn.addEventListener('click', handlePrev);
-                newNextBtn.addEventListener('click', handleNext);
-            }
-            
             renderQuestion();
         }
 
@@ -740,7 +758,7 @@
             if (prevBtn) prevBtn.addEventListener('click', handlePrev);
             if (nextBtn) nextBtn.addEventListener('click', handleNext);
 
-            // Rendre la première question
+            // Rendre la première question et activer Suivant
             renderQuestion();
         }
 
