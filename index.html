@@ -1,21 +1,750 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz en ligne</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz : Formation des contrats en droit civil québécois</title>
+    <style>
+        /* --- Styles Généraux (Thème CLAIR & NEUTRE) --- */
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #F4F7F9; /* Arrière-plan clair */
+            text-align: center;
+            padding: 20px;
+            color: #333; /* Texte principal foncé */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: #1A202C; /* Titre presque noir */
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        /* Style du texte de progression/score */
+        #score {
+            font-size: 1em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+            color: #6C757D; /* Gris */
+            width: 100%;
+        }
+
+        /* --- Conteneur du Quiz --- */
+
+        #quiz {
+            background: #FFFFFF; /* Conteneur blanc */
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px auto;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Ombre légère */
+            text-align: left;
+        }
+
+        /* Style du titre de la question */
+        #quiz h2 {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            text-align: left;
+            color: #1a202c;
+            line-height: 1.5;
+            font-weight: 600;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        /* Style spécifique du numéro de question */
+        .question-number {
+            font-weight: 700;
+            color: #1A202C;
+            flex-shrink: 0;
+            margin-right: 15px;
+            min-width: 20px;
+            text-align: left;
+        }
+        
+        /* Style du texte de la question */
+        .question-text {
+            flex-grow: 1;
+            text-align: left;
+            padding-top: 1px;
+        }
+
+
+        /* --- Style des Options de Réponse (Tuiles) --- */
+
+        .option-btn {
+            border: none;
+            box-shadow: none;
+            display: flex;
+            flex-direction: column; /* Utiliser column pour empiler l'option et la rationale */
+            align-items: flex-start;
+            width: 100%;
+            margin: 10px 0;
+            margin-bottom: 15px;
+            padding: 15px 20px;
+            min-height: 50px;
+            
+            background: #F8F9FA;
+            color: #333;
+            font-size: 1em;
+            text-align: left;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            line-height: 1.4;
+        }
+        
+        /* Conteneur pour l'option (prefix + content + icon) pour garder l'alignement flex initial */
+        .option-header {
+            display: flex;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        /* Styles pour l'espacement interne des options */
+        .option-prefix {
+            font-weight: 700;
+            color: #4A5568;
+            flex-shrink: 0;
+            margin-right: 15px;
+            min-width: 20px;
+            text-align: left;
+        }
+
+        .option-content {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        /* Effet de survol (Hover) sur les tuiles */
+        .option-btn:not(:disabled):hover {
+            background: #E9ECEF; 
+            border-color: #ADB5BD; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transform: none;
+        }
+        
+        /* --- Styles de Feedback (Vert et Rouge) --- */
+
+        /* Réponse Correcte (Verte) - Pour l'option choisie si elle est correcte */
+        .option-btn.selected-correct {
+            background: #D4EDDA !important; 
+            color: #155724 !important; 
+            border: 2px solid #155724 !important; 
+            font-weight: 600; 
+            padding: 14px 19px !important; 
+        }
+        .option-btn.selected-correct .option-prefix, .option-btn.selected-correct .option-content {
+            font-weight: 600 !important; 
+            color: #155724 !important; 
+        }
+        
+        /* Réponse Incorrecte (Rouge) - pour l'option choisie par l'utilisateur */
+        .option-btn.selected-incorrect {
+            background: #F8D7DA !important; 
+            color: #721C24 !important; 
+            border: 2px solid #721C24 !important; 
+            font-weight: 600;
+            padding: 14px 19px !important; 
+        }
+        .option-btn.selected-incorrect .option-prefix, .option-btn.selected-incorrect .option-content {
+            font-weight: 600 !important;
+            color: #721C24 !important;
+        }
+        
+        /* Style des icônes */
+        .option-feedback-icon {
+            margin-left: auto;
+            font-weight: 900;
+            font-size: 1.2em;
+            padding-left: 10px;
+            flex-shrink: 0;
+        }
+
+        /* --- Style de la Rationale Intégrée (S'applique UNIQUEMENT à l'option choisie) --- */
+
+        .rationale-text {
+            width: 100%;
+            margin-top: 10px;
+            padding-top: 10px;
+            text-align: left;
+            line-height: 1.4;
+            /* Ligne de séparation dans la tuile */
+            border-top: 1px solid; 
+            font-weight: 400 !important; /* Rationale en poids normal */
+        }
+        
+        /* Rationale si l'option choisie est CORRECTE (Vert) */
+        .option-btn.selected-correct .rationale-text {
+            border-top-color: #28a745; 
+            color: #155724;
+        }
+        
+        /* Rationale si l'option choisie est INCORRECTE (Rouge) */
+        .option-btn.selected-incorrect .rationale-text {
+            border-top-color: #dc3545; 
+            color: #721C24;
+        }
+
+
+        /* --- Styles de Navigation et Révision (Inchangés) --- */
+
+        #navigation-buttons {
+            max-width: 650px;
+            margin: 20px auto;
+            text-align: right;
+            padding: 0 30px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+        }
+
+        .nav-group {
+            display: flex;
+            gap: 10px; 
+        }
+
+        /* Style par défaut pour les boutons de navigation */
+        #navigation-buttons button {
+            border: none;
+            box-shadow: none;
+            display: inline-block;
+            width: auto;
+            font-size: 1em;
+            font-weight: 600;
+            padding: 12px 25px;
+            border-radius: 6px;
+            transition: background 0.2s ease, transform 0.1s;
+            text-align: center;
+            cursor: pointer;
+            color: white; 
+        }
+        
+        #prev {
+            background: #6C757D;
+        }
+
+        #prev:hover {
+            background: #5A6268;
+            transform: translateY(-1px);
+        }
+
+        #next {
+            background: #007BFF;
+        }
+
+        #next:hover {
+            background: #0056b3;
+            transform: translateY(-1px);
+        }
+        
+        /* Bouton désactivé */
+        #next:disabled, #prev:disabled, .option-btn:disabled {
+            background: #ADB5BD !important; 
+            color: #F8F9FA;
+            cursor: not-allowed;
+            transform: none;
+            opacity: 0.9;
+        }
+
+
+        /* Style pour le bouton de révision (apparaît seul à la fin) */
+        #review-btn {
+            background: #4A5568;
+            color: white;
+            margin: 0 auto;
+            display: block !important;
+        }
+        
+        #review-btn:hover {
+            background: #2D3748;
+        }
+
+        /* Image de fin */
+        #quiz img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto 0 auto;
+            border-radius: 8px;
+        }
+
+
+        /* Media Queries pour la Responsivité Mobile */
+        @media (max-width: 600px) {
+            #quiz {
+                padding: 20px 15px;
+                margin: 15px auto;
+            }
+            #quiz h2 {
+                font-size: 1.1em;
+            }
+            .option-btn {
+                margin-bottom: 10px;
+                padding: 12px 15px;
+                font-size: 0.95em;
+                min-height: 50px;
+            }
+            
+            .option-prefix {
+                margin-right: 10px; 
+            }
+            .rationale-text {
+                margin-top: 8px;
+                padding-top: 8px;
+                font-size: 0.9em;
+            }
+
+
+            #navigation-buttons {
+                text-align: center;
+                padding: 0 15px;
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            .nav-group {
+                width: 48%; 
+                justify-content: center;
+            }
+            #navigation-buttons button {
+                width: 100%;
+                padding: 10px 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h1>Quiz : Droit des contrats</h1>
-  
-  <div id="quiz"></div>
-  
-  <div id="navigation-buttons">
-    <button id="prev">Précédent</button>
-    <button id="next">Suivant</button>
-  </div>
-  
-  <p id="score">Question 1/X</p> <script src="script.js"></script>
+    <h1>Quiz : Règles de formation des contrats en droit civil québécois</h1>
+    
+    <div id="score"></div>
+    <div id="quiz">
+        <!-- Les questions et options seront chargées ici par JavaScript -->
+    </div>
+    <div id="navigation-buttons">
+        <div class="nav-group">
+            <button id="prev">Précédent</button>
+        </div>
+        <div class="nav-group">
+            <button id="next" disabled>Suivant</button>
+        </div>
+    </div>
+
+    <script>
+        // Data du quiz
+        const questions = [
+            {
+                question: "1. En droit civil québécois, quel est le principe fondamental dans la formation des contrats qui permet à une entente d'être valide par le seul échange de consentements, sans écrit spécifique ?",
+                options: ["A. La restitution des prestations.", "B. L’opposabilité des droits.", "C. Le consensualisme.", "D. Le formalisme contractuel."],
+                answer: 2,
+                rationales: [
+                    "La restitution des prestations est une conséquence de l'annulation ou de la résolution d'un contrat, pas un principe de formation.",
+                    "L’opposabilité des droits est un effet de la publicité des droits, et non un principe de base de la formation.",
+                    "Le principe du consensualisme (art. 1385 C.c.Q.) stipule que l'échange des consentements suffit à la formation du contrat. C'est la règle générale en droit québécois.",
+                    "Le formalisme est l'exception, et non le principe général. Il exige une forme spécifique (ex: écrit, notarié)."
+                ]
+            },
+            {
+                question: "2. Quelle est la principale distinction entre la nullité relative et la nullité absolue en termes d'intérêt protégé ?",
+                options: ["A. La nullité relative protège un intérêt privé (une partie); la nullité absolue protège l'intérêt général (ordre public).", "B. La nullité relative peut être invoquée par tout intéressé; la nullité absolue seulement par la victime.", "C. La nullité relative sanctionne l'objet ou la cause illégale; la nullité absolue sanctionne les vices de consentement.", "D. La nullité relative s'applique aux contrats synallagmatiques; la nullité absolue aux contrats unilatéraux."],
+                answer: 0,
+                rationales: [
+                    "La nullité relative protège l'intérêt particulier (vices de consentement, incapacité) tandis que la nullité absolue protège l'intérêt général (ordre public, absence de consentement).",
+                    "C'est l'inverse : la nullité absolue peut être invoquée par tout intéressé, alors que la relative est réservée à la victime ou à celui que la loi protège.",
+                    "C'est l'inverse. L'objet ou la cause illégale (intérêt public) mène à la nullité absolue. Les vices de consentement mènent à la nullité relative.",
+                    "La distinction ne repose pas sur la nature du contrat (synallagmatique/unilatéral)."
+                ]
+            },
+            {
+                question: "3. Dans un contrat de consommation ou d'adhésion au Québec, si une clause externe n'a pas été expressément portée à la connaissance de la partie adhérente, quelle est la sanction juridique de cette clause selon l'article 1435 C.c.Q. ?",
+                options: ["A. L’adhérent a droit à des dommages-intérêts punitifs contre l’auteur du contrat.", "B. La clause est frappée de nullité relative, et l’ensemble du contrat est annulé.", "C. La clause est susceptible d’une renégociation obligatoire.", "D. La clause est nulle et réputée non écrite."],
+                answer: 3,
+                rationales: [
+                    "Les dommages-intérêts punitifs ne sont pas la sanction prévue par l'art. 1435 C.c.Q. C'est une mesure exceptionnelle.",
+                    "Seule la clause est sanctionnée, pas l'ensemble du contrat (art. 1435 C.c.Q.). Le contrat continue d'exister sans cette clause.",
+                    "Il n'y a pas d'obligation légale de renégocier cette clause. Elle est simplement écartée.",
+                    "La clause est nulle et réputée non écrite (art. 1435 C.c.Q.). C'est une sanction très forte qui la retire du contrat sans affecter le reste."
+                ]
+            },
+            {
+                question: "4. Quelle est la raison pour laquelle la vente d'un immeuble (Art. 2938 C.c.Q.) doit généralement faire l'objet d'un acte notarié et d'une publicité au Registre foncier ?",
+                options: [
+                    "A. Pour conférer la qualité de contrat d'adhésion au document.", 
+                    "B. Pour respecter l'exigence de la forme écrite 'ad probationem'.", 
+                    "C. Pour garantir la protection contre les vices cachés, même par le vendeur non professionnel.", 
+                    "D. Pour assurer la sécurité foncière et rendre le droit de propriété opposable aux tiers."
+                ],
+                answer: 3,
+                rationales: [
+                    "Le contrat d'adhésion est défini par sa nature (non négocié), et non par sa forme notariée.",
+                    "L'acte notarié est une formalité ad solemnitatem (pour la validité du titre translatif), et la publicité est pour l'opposabilité, pas seulement ad probationem (preuve).",
+                    "La garantie des vices cachés est une obligation de fond de la vente, indépendante de la forme notariée et de la publicité.",
+                    "La publicité des droits (enregistrement) est essentielle pour rendre le droit de l'acheteur (droit de propriété) connu et opposable à tous les tiers. C'est la base de la sécurité foncière."
+                ]
+            },
+            {
+                question: "5. Qu'est-ce qui caractérise un contrat nommé en droit civil québécois (Art. 1377 C.c.Q.) ?",
+                options: [
+                    "A. Il est obligatoirement rédigé sous la forme d'un acte notarié en minute.", 
+                    "B. Il est créé et négocié spécifiquement entre deux parties qui lui donnent un nom.", 
+                    "C. Il est expressément désigné et réglementé par des dispositions spécifiques dans le Code civil du Québec (C.c.Q.).", 
+                    "D. Il déroge systématiquement à toutes les règles générales du droit des obligations."
+                ],
+                answer: 2,
+                rationales: [
+                    "Certains contrats nommés exigent un acte notarié (ex. hypothèque légale), mais ce n'est pas le cas de tous (ex. vente, louage).",
+                    "Ceci décrit plutôt un contrat innommé (créé de novo par les parties).",
+                    "Un contrat nommé (ex. vente, louage, mandat) a un nom et un régime juridique propre défini dans le Code civil du Québec.",
+                    "Le contrat nommé doit toujours respecter les règles générales du droit des obligations (le droit commun), en plus de ses règles spécifiques."
+                ]
+            },
+            {
+                question: "6. Pourquoi le Dol permet-il d'obtenir la nullité, même si la victime aurait pu éviter l'erreur par une vérification simple (erreur inexcusable) ?",
+                options: [
+                    "A. Parce que le dol est une cause de lésion.", 
+                    "B. Parce que le dol est toujours présumé.", 
+                    "C. Parce que la mauvaise foi du cocontractant est jugée plus grave que la négligence de la victime.", 
+                    "D. Parce que le dol est sanctionné par la nullité absolue."
+                ],
+                answer: 2,
+                rationales: [
+                    "La lésion est un préjudice économique (rarement admissible), alors que le dol est un vice de consentement (erreur provoquée).",
+                    "Le dol (manœuvre frauduleuse) doit toujours être prouvé, il n'est pas présumé (Art. 1401 C.c.Q.).",
+                    "La jurisprudence considère que la faute intentionnelle (mauvaise foi) du cocontractant prime sur la négligence de la victime, rendant ainsi le contrat annulable.",
+                    "Le dol est un vice de consentement, sanctionné par la nullité relative."
+                ]
+            },
+            {
+                question: "7. Une erreur inexcusable est une erreur qui...",
+                options: [
+                    "A. Concerne la nature du contrat ou l'objet de la prestation.", 
+                    "B. N'est pas sanctionnée, car elle résulte d'une négligence grave de la victime.", 
+                    "C. A été provoquée par le dol de l'autre partie.", 
+                    "D. Ne porte que sur des motifs personnels ou des qualités secondaires."
+                ],
+                answer: 1,
+                rationales: [
+                    "Ceci décrit une erreur simple (Art. 1400 C.c.Q.) qui est admissible si elle est excusable.",
+                    "Si l'erreur provient d'une négligence grossière de la victime, elle est considérée comme inexcusable et n'entraîne pas la nullité du contrat.",
+                    "Si l'erreur est provoquée par le dol, elle est toujours admissible, peu importe son caractère 'inexcusable'.",
+                    "Ceci décrit une erreur indifférente, qui n'affecte pas la validité du contrat."
+                ]
+            },
+            {
+                question: "8. Quelles sont les conséquences d'un contrat frappé d'une nullité relative ?",
+                options: [
+                    "A. La nullité peut être invoquée par toute personne intéressée et ne peut pas être couverte par la confirmation.",
+                    "B. La nullité peut être invoquée seulement par la partie que la loi entend protéger et peut être couverte par la confirmation.",
+                    "C. La seule conséquence est l'allocation de dommages-intérêts.",
+                    "D. Le contrat est nulle et non avenu et les parties doivent obligatoirement restituer les prestations."
+                ],
+                answer: 1,
+                rationales: [
+                    "Ceci décrit la nullité absolue (Art. 1418 C.c.Q.).",
+                    "La nullité relative (ex. vice de consentement) est instituée dans l'intérêt privé et est donc susceptible d'être couverte par la confirmation de la partie lésée (art. 1419, 1420 C.c.Q.).",
+                    "La nullité entraîne l'annulation rétroactive du contrat et la restitution des prestations, pas seulement des dommages-intérêts.",
+                    "La restitution est une conséquence de la nullité, mais la distinction essentielle de la relative est son caractère privé et confirmable."
+                ]
+            },
+            {
+                question: "9. Un contrat de mandat (Art. 2130 C.c.Q.) est une entente par laquelle :",
+                options: [
+                    "A. Une partie fournit un travail matériel pour l'autre, moyennant une rémunération.",
+                    "B. Une personne, le mandant, charge une autre personne, le mandataire, de la représenter dans l'accomplissement d'un acte juridique.",
+                    "C. Le créancier remet au débiteur un bien afin de garantir l'exécution d'une obligation.",
+                    "D. Le bailleur s'engage à procurer la jouissance d'un bien à une autre personne, le locataire, contre un loyer."
+                ],
+                answer: 1,
+                rationales: [
+                    "Ceci décrit le contrat d'entreprise ou de service.",
+                    "Le mandat est le contrat par lequel le mandant confie au mandataire le pouvoir de le représenter pour accomplir un acte juridique (Art. 2130 C.c.Q.).",
+                    "Ceci décrit le gage ou l'hypothèque mobilière.",
+                    "Ceci décrit le contrat de louage (bail)."
+                ]
+            },
+            {
+                question: "10. Quelles sont les conditions essentielles à la formation valide d'un contrat selon l'article 1385 C.c.Q. ?",
+                options: ["A. La capacité de contracter, le droit de propriété, un prix, et la publicité du contrat.", "B. Le consentement (libre et éclairé), la capacité de contracter, un objet et une cause.", "C. La preuve écrite, l’absence de dol, la capacité des parties, et l’objet de l’obligation.", "D. Le consentement, la capacité, la forme solennelle et la clause pénale."],
+                answer: 1,
+                rationales: [
+                    "Le droit de propriété et la publicité ne sont pas des conditions essentielles à la formation de *tous* les contrats.",
+                    "L'article 1385 C.c.Q. énonce ces quatre conditions : Consentement, Capacité, Objet et Cause.",
+                    "La preuve écrite n'est pas essentielle à la formation (principe du consensualisme). L'absence de dol est liée à la qualité du consentement.",
+                    "La forme solennelle n'est requise que pour les contrats solennels (exception)."
+                ]
+            }
+        ];
+
+        // État du quiz
+        let currentQuestionIndex = 0;
+        // userAnswers stocke l'INDEX de l'option choisie pour chaque question (null si rien n'est sélectionné)
+        const userAnswers = new Array(questions.length).fill(null);
+        // userAttempted stocke si la question a été tentée au moins une fois
+        const userAttempted = new Array(questions.length).fill(false);
+        let quizMode = 'quiz'; // 'quiz' ou 'review'
+
+        // Éléments du DOM
+        const quizContainer = document.getElementById('quiz');
+        const scoreDisplay = document.getElementById('score');
+        const prevBtn = document.getElementById('prev');
+        const nextBtn = document.getElementById('next');
+        const navButtons = document.getElementById('navigation-buttons');
+
+        // --- Fonctions d'Affichage ---
+
+        function renderQuestion() {
+            if (currentQuestionIndex >= questions.length) {
+                renderResults();
+                return;
+            }
+
+            const q = questions[currentQuestionIndex];
+            const savedAnswerIndex = userAnswers[currentQuestionIndex];
+            // Détermine si le mode révision est actif
+            const isReviewMode = quizMode === 'review';
+            
+            // Séparer le numéro de la question du texte
+            const match = q.question.match(/^(\d+)\.(.*)/);
+            const questionNumber = match ? match[1] + '.' : `${currentQuestionIndex + 1}.`;
+            const questionText = match ? match[2].trim() : q.question.trim();
+
+            // Construction du HTML de la question avec le numéro séparé
+            let html = `
+                <h2>
+                    <span class="question-number">${questionNumber}</span>
+                    <span class="question-text">${questionText}</span>
+                </h2>
+            `;
+            
+            q.options.forEach((option, index) => {
+                const isCorrect = index === q.answer;
+                const isSelected = index === savedAnswerIndex;
+                const rationaleText = q.rationales[index];
+
+                let classes = 'option-btn';
+                let icon = '';
+                let rationaleHtml = '';
+
+                // Logique d'affichage des classes et de la rationale (Uniquement en mode révision OU si une réponse est sélectionnée)
+                if (isReviewMode || savedAnswerIndex !== null) { 
+                    if (isSelected) {
+                        // Feedback pour l'option choisie
+                        if (isCorrect) {
+                            classes += ' selected-correct';
+                            icon = '&#10003;';
+                        } else {
+                            classes += ' selected-incorrect';
+                            icon = '&#10006;';
+                        }
+                        rationaleHtml = `<div class="rationale-text">${rationaleText}</div>`;
+                    }
+                    // Si on est en mode révision, on peut montrer la bonne réponse manquée
+                    else if (isReviewMode && isCorrect) {
+                         // Optionnel : style la bonne réponse si manquée en mode révision
+                    }
+                }
+                
+                // Les boutons ne sont désactivés que si on est en mode révision
+                const isDisabled = isReviewMode; 
+                const disabledAttribute = isDisabled ? 'disabled' : '';
+
+                // Séparer la numérotation du texte
+                const prefixMatch = option.match(/^([A-Z]\.?)\s*(.*)/);
+                const prefix = prefixMatch ? prefixMatch[1].replace(/\.+$/, '.') : option.substring(0, 2); 
+                const text = prefixMatch ? prefixMatch[2].trim() : option.substring(2).trim();
+
+                html += `
+                    <button class="${classes}" data-index="${index}" ${disabledAttribute}>
+                        <div class="option-header">
+                            <span class="option-prefix">${prefix}</span>
+                            <span class="option-content">${text}</span>
+                            ${icon ? `<span class="option-feedback-icon">${icon}</span>` : ''}
+                        </div>
+                        ${rationaleHtml}
+                    </button>
+                `;
+            });
+
+            quizContainer.innerHTML = html;
+            updateScoreDisplay();
+            updateNavigationButtons();
+            
+            // Ajout des listeners après le rendu, uniquement si PAS en mode révision
+            if (!isReviewMode) {
+                document.querySelectorAll('.option-btn').forEach(button => {
+                    button.addEventListener('click', handleAnswerSelect);
+                });
+            }
+        }
+
+        /**
+         * Fonction de sélection de réponse (maintenant modifiable).
+         * Enregistre la réponse et re-rend la question, permettant un nouveau choix.
+         */
+        function handleAnswerSelect(event) {
+            const selectedButton = event.currentTarget;
+            const selectedIndex = parseInt(selectedButton.dataset.index);
+
+            // 1. Mettre à jour l'état
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            userAttempted[currentQuestionIndex] = true; // Marquer comme tenté
+
+            // 2. Re-rendre la question pour : 
+            //    - Afficher le feedback sur l'option sélectionnée.
+            //    - Retirer le feedback de l'option précédemment sélectionnée (si elle existe).
+            renderQuestion();
+
+            // 3. Activer le bouton Suivant
+            nextBtn.disabled = false;
+        }
+        
+        function calculateScore() {
+            let correctCount = 0;
+            for (let i = 0; i < questions.length; i++) {
+                // Seulement compter si la question a été TENTÉE (userAttempted) et est correcte
+                if (userAttempted[i] && userAnswers[i] !== null && userAnswers[i] === questions[i].answer) {
+                    correctCount++;
+                }
+            }
+            return correctCount;
+        }
+
+
+        function renderResults() {
+            const finalScore = calculateScore();
+            const totalQuestions = questions.length;
+            const percentage = Math.round((finalScore / totalQuestions) * 100);
+
+            quizContainer.innerHTML = `
+                <div style="text-align: center;">
+                    <h2>Quiz terminé !</h2>
+                    <p style="font-size: 1.2em; margin-bottom: 10px;">
+                        Votre score final : <strong>${finalScore}/${totalQuestions}</strong>
+                    </p>
+                    <p style="margin-bottom: 30px; color: #4A5568;">
+                        Continuez de réviser pour maîtriser le droit des contrats !
+                    </p>
+                    <button id="review-btn" class="option-btn" style="width: 250px; background: #4A5568; color: white; display: block; margin: 0 auto; border: none; font-weight: 700;">
+                        Revoir mes réponses
+                    </button>
+                    <!-- Image de félicitations -->
+                    <img src="https://placehold.co/400x200/4A5568/FFFFFF?text=Félicitations+!%0ARevoyez+vos+réponses" alt="Image de fin de quiz">
+                </div>
+            `;
+            scoreDisplay.textContent = '';
+            navButtons.innerHTML = ''; // Cacher les boutons de navigation standard
+
+            document.getElementById('review-btn').addEventListener('click', startReviewMode);
+        }
+
+        /**
+         * Mise à jour pour afficher uniquement "Question X/Y"
+         */
+        function updateScoreDisplay() {
+            const totalQuestions = questions.length;
+
+            if (quizMode === 'quiz' || quizMode === 'review') {
+                scoreDisplay.innerHTML = `Question ${currentQuestionIndex + 1}/${totalQuestions}`;
+            }
+        }
+
+        function updateNavigationButtons() {
+            // Bouton Précédent
+            prevBtn.disabled = currentQuestionIndex === 0;
+
+            // Bouton Suivant
+            if (currentQuestionIndex === questions.length - 1) {
+                nextBtn.textContent = (quizMode === 'quiz') ? 'Terminer le Quiz' : 'Fin de la Révision';
+            } else {
+                nextBtn.textContent = 'Suivant';
+            }
+            
+            // Gestion de l'état du bouton Suivant
+            if (quizMode === 'quiz') {
+                // En mode quiz, désactivé si pas encore tenté (sélectionné)
+                nextBtn.disabled = userAnswers[currentQuestionIndex] === null; 
+            } else {
+                 // En mode révision, toujours actif pour naviguer
+                nextBtn.disabled = false;
+            }
+        }
+
+        // --- Fonctions de Navigation ---
+        
+        function handlePrev() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+            }
+        }
+
+        function handleNext() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else if (currentQuestionIndex === questions.length - 1) {
+                // Dernier clic, terminer le quiz/la révision
+                renderResults();
+            }
+        }
+        
+        function startReviewMode() {
+            quizMode = 'review';
+            currentQuestionIndex = 0; // Commencer au début pour la révision
+            
+            // Reconstruire l'UI avec les boutons de navigation (si cachés)
+            if (!document.getElementById('prev') || !document.getElementById('next')) {
+                 navButtons.innerHTML = `
+                    <div class="nav-group">
+                        <button id="prev">Précédent</button>
+                    </div>
+                    <div class="nav-group">
+                        <button id="next">Suivant</button>
+                    </div>
+                `;
+                // Réattacher les listeners
+                document.getElementById('prev').addEventListener('click', handlePrev);
+                document.getElementById('next').addEventListener('click', handleNext);
+            }
+
+            // Mettre à jour les références aux boutons après reconstruction si nécessaire
+            const newPrevBtn = document.getElementById('prev');
+            const newNextBtn = document.getElementById('next');
+            
+            // Assurez-vous que les événements sont attachés aux nouveaux boutons
+            if (newPrevBtn && newNextBtn) {
+                newPrevBtn.addEventListener('click', handlePrev);
+                newNextBtn.addEventListener('click', handleNext);
+            }
+            
+            renderQuestion();
+        }
+
+        // --- Initialisation ---
+
+        function init() {
+            // S'assurer que les listeners ne sont attachés qu'une seule fois
+            if (prevBtn) prevBtn.removeEventListener('click', handlePrev);
+            if (nextBtn) nextBtn.removeEventListener('click', handleNext);
+
+            if (prevBtn) prevBtn.addEventListener('click', handlePrev);
+            if (nextBtn) nextBtn.addEventListener('click', handleNext);
+
+            // Rendre la première question
+            renderQuestion();
+        }
+
+        window.onload = init;
+    </script>
 </body>
 </html>
