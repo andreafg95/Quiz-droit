@@ -32,9 +32,22 @@ h1 {
   text-align: center; /* Centrer la question */
 }
 
+/* Style du texte de progression/score */
+#score {
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+  margin-top: 15px;
+  color: #555;
+}
+
 /* --- Style des Options de Réponse (Tuiles) --- */
 
 #quiz button {
+  /* Réinitialisation pour les tuiles */
+  border: none;
+  box-shadow: none;
+
   display: block;        /* Chaque option sur sa propre ligne (tuiles empilées) */
   width: 100%;           /* Occupe toute la largeur du conteneur */
   margin: 10px 0;        /* Espacement vertical entre les tuiles */
@@ -49,9 +62,6 @@ h1 {
   border-radius: 6px;    /* Coins légèrement arrondis */
   cursor: pointer;
   
-  /* Retrait des styles globaux pour les boutons d'options */
-  box-shadow: none;
-  
   /* Transition fluide pour les effets */
   transition: all 0.2s ease;
 }
@@ -64,7 +74,7 @@ h1 {
   transform: none;          /* Pas de soulèvement */
 }
 
-/* Style pour l'option précédemment choisie (classe ajoutée par JS) */
+/* Style pour l'option précédemment choisie (classe .selected ajoutée par JS) */
 #quiz button.selected {
   background: #EAF2F8; /* Fond légèrement bleuté */
   border-color: #007BFF; /* Bordure bleue pour indiquer la sélection */
@@ -78,7 +88,16 @@ h1 {
   border-color: #0056b3;
 }
 
-/* --- Styles de Navigation Précédent/Suivant --- */
+/* --- Style de l'image de fin (GIF) --- */
+#quiz img {
+  max-width: 100%; 
+  height: auto;
+  display: block; 
+  margin: 20px auto 0 auto; /* Centre l'image */
+}
+
+
+/* --- Styles de Navigation Précédent/Suivant et Révision --- */
 
 #navigation-buttons {
   max-width: 650px;
@@ -87,18 +106,21 @@ h1 {
   padding: 0 30px;
 }
 
-/* Style par défaut pour les boutons de navigation */
+/* Style par défaut pour les boutons de navigation (Précédent/Suivant/Révision) */
 #navigation-buttons button {
-    /* Réinitialise le style des tuiles pour les boutons Précédent/Suivant */
+    /* Réinitialisation des styles de tuiles */
+    border: none;
+    box-shadow: none;
+    margin: 0;
+
+    /* Styles pour le groupe de boutons */
     display: inline-block;
     width: auto;
-    margin: 0;
     font-size: 1em;
     font-weight: 600;
     padding: 12px 25px;
     border-radius: 6px;
     transition: background 0.2s ease;
-    box-shadow: none;
     text-align: center;
 }
 
@@ -106,7 +128,7 @@ h1 {
 #prev {
   background: #6C757D; /* Gris */
   color: white;
-  border: none;
+  margin-right: 10px; /* Espace entre Précédent et Suivant */
 }
 
 #prev:hover {
@@ -117,10 +139,17 @@ h1 {
 #next {
   background: #007BFF; /* Bleu vif pour l'action principale */
   color: white;
-  border: none;
-  margin-left: 10px; /* Espace entre Précédent et Suivant */
 }
 
 #next:hover {
   background: #0056b3;
+}
+
+/* Style pour le bouton de révision (apparaît seul à la fin) */
+#review-btn {
+  /* Assure qu'il utilise le style du bouton Suivant, mais centré */
+  background: #007BFF; 
+  color: white;
+  margin: 0 auto; 
+  display: block !important; 
 }
