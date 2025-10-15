@@ -2,7 +2,8 @@ const questions = [
   {
     question: "Un contrat de vente est-il toujours synallagmatique ?",
     options: ["Oui", "Non"],
-    answer: 0
+    // CORRECTION : Un contrat de vente est toujours synallagmatique (Oui = index 0)
+    answer: 0 
   },
   {
     question: "Quel élément n'est pas essentiel à la formation d’un contrat ?",
@@ -17,8 +18,6 @@ let current = 0; // Index de la question actuelle
 
 // Récupération des éléments du DOM
 const quizDiv = document.getElementById("quiz");
-const nextBtn = document.getElementById("next");
-const prevBtn = document.getElementById("prev");
 const scoreText = document.getElementById("score");
 const navContainer = document.getElementById("navigation-buttons");
 
@@ -48,36 +47,38 @@ function showQuestion() {
 
 // Enregistre et met en évidence la réponse sélectionnée
 function selectAnswer(selectedIndex) {
-  // 1. Enregistrer la réponse dans l'historique
   userAnswers[current] = selectedIndex;
   
-  // 2. Mettre à jour visuellement le choix
   document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
   document.querySelector(`.option-btn[data-index="${selectedIndex}"]`).classList.add('selected');
 }
 
 // Met à jour l'affichage des boutons (Précédent/Suivant)
 function updateNavigation() {
-  // Le bouton Précédent est caché sur la première question
-  prevBtn.style.display = current === 0 ? "none" : "inline-block";
+  // Récupérer les boutons (nécessaire car ils sont réinjectés dans startReview())
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
+
+  if (prevBtn) {
+      prevBtn.style.display = current === 0 ? "none" : "inline-block";
+  }
   
-  // Le conteneur de navigation est caché à la fin du quiz
   if (current === questions.length) {
     navContainer.style.display = "none";
   } else {
     navContainer.style.display = "block";
-    // Mettre à jour le texte du bouton Suivant (Terminer ou Suivant)
-    nextBtn.textContent = current === questions.length - 1 ? "Terminer le Quiz" : "Suivant";
+    if (nextBtn) {
+        nextBtn.textContent = current === questions.length - 1 ? "Terminer le Quiz" : "Suivant";
+    }
   }
 }
 
-// Affiche la progression (Question X/Y) ou le score final
+// Affiche la progression (Question X/Y)
 function updateScoreText() {
     if (current < questions.length) {
         scoreText.textContent = `Question ${current + 1}/${questions.length}`;
         scoreText.style.display = "block";
     } else {
-        // Le score final est affiché par endQuiz(), mais nous assurons que le texte est visible
         scoreText.style.display = "block";
     }
 }
@@ -93,54 +94,7 @@ function calculateScore() {
   return finalScore;
 }
 
-// --- NOUVELLE FONCTION POUR LE RETOUR À LA RÉVISION ---
-function startReview() {
-  // Définir l'index pour revenir à la première question
-  current = 0; 
-  // Rétablit le contenu du conteneur de navigation aux boutons standard
-  navContainer.innerHTML = `<button id="prev">Précédent</button><button id="next">Suivant</button>`;
-  
-  // Les écouteurs d'événements doivent être réattachés aux nouveaux boutons
-  document.getElementById("prev").addEventListener("click", handlePrevClick);
-  document.getElementById("next").addEventListener("click", handleNextClick);
-  
-  // Afficher la première question
-  showQuestion();
-}
-
-
-// Gère l'affichage des résultats finaux (avec le GIF si parfait)
-function endQuiz() {
-  const finalScore = calculateScore();
-  const totalQuestions = questions.length;
-  let quizResultHTML = "";
-  
-  if (finalScore === totalQuestions) {
-    // Si le score est parfait
-    quizResultHTML = `
-      <h2>Félicitations ! 🎉</h2>
-      <p>Vous avez un score parfait ! ( ${finalScore}/${totalQuestions} )</p>
-      <img src="https://media.tenor.com/tC7I0Q-kUkwAAAAd/damana.gif" alt="Chat qui tape du poing" style="width: 150px; margin-top: 20px; border-radius: 8px;">
-    `;
-  } else {
-    // Si le score n'est pas parfait
-    quizResultHTML = `
-      <h2>Quiz terminé !</h2>
-      <p>Continuez à réviser !</p>
-      <p style="margin-top: 15px;">Votre score : ${finalScore}/${totalQuestions}</p>
-    `;
-  }
-  
-  quizDiv.innerHTML = quizResultHTML;
-  scoreText.textContent = `Score final : ${finalScore}/${totalQuestions}`;
-  
-  // Remplacer les boutons de navigation par le bouton de révision
-  navContainer.innerHTML = `<button id="review-btn" onclick="startReview()">Revoir mes réponses</button>`;
-  navContainer.style.display = "block"; 
-}
-
-
-// --- ÉCOUTEURS D'ÉVÉNEMENTS DE NAVIGATION (Fonctions nommées pour réutilisation) ---
+// --- GESTION DE LA NAVIGATION ---
 
 function handlePrevClick() {
   if (current > 0) {
@@ -154,16 +108,57 @@ function handleNextClick() {
     current++;
     showQuestion();
   } else if (current === questions.length - 1) {
-    // Si c'est la dernière question
     current++; 
     endQuiz();
   }
 }
 
-// Attacher les écouteurs au démarrage
+// --- NOUVELLE FONCTION POUR LE RETOUR À LA RÉVISION ---
+function startReview() {
+  current = 0; // Revenir à la première question
+  
+  // Rétablit le contenu du conteneur de navigation aux boutons standard
+  navContainer.innerHTML = `<button id="prev">Précédent</button><button id="next">Suivant</button>`;
+  
+  // Les écouteurs d'événements DOIVENT être réattachés aux nouveaux boutons
+  document.getElementById("prev").addEventListener("click", handlePrevClick);
+  document.getElementById("next").addEventListener("click", handleNextClick);
+  
+  showQuestion();
+}
+
+// Gère l'affichage des résultats finaux (avec le GIF systématique)
+function endQuiz() {
+  const finalScore = calculateScore();
+  const totalQuestions = questions.length;
+  
+  const message = finalScore === totalQuestions 
+    ? "Félicitations ! 🎉" 
+    : "Quiz terminé !";
+    
+  // Utilisation d'un GIF Giphy plus fiable pour la démo, au cas où Tenor serait bloqué
+  const gifUrl = "https://media.tenor.com/tC7I0Q-kUkwAAAAd/damana.gif";
+    
+  quizDiv.innerHTML = `
+    <h2>${message}</h2>
+    <p>Votre score final : ${finalScore}/${totalQuestions}</p>
+    
+    <img src="${gifUrl}" alt="Chat qui tape du poing" style="width: 150px; margin: 20px auto 10px auto; border-radius: 8px;">
+    
+    <p>${finalScore === totalQuestions ? 'Incroyable, vous avez un score parfait !' : 'Continuez à réviser pour maîtriser le droit des contrats !'}</p>
+  `;
+  
+  scoreText.textContent = ''; // Cache le texte de progression
+
+  // Remplacer les boutons de navigation par le bouton de révision
+  navContainer.innerHTML = `<button id="review-btn" onclick="startReview()">Revoir mes réponses</button>`;
+  navContainer.style.display = "block"; 
+}
+
+
+// --- ATTACHEMENT INITIAL DES ÉCOUTEURS ---
 document.getElementById("prev").addEventListener("click", handlePrevClick);
 document.getElementById("next").addEventListener("click", handleNextClick);
-
 
 // Démarrer le quiz au chargement de la page
 showQuestion();
