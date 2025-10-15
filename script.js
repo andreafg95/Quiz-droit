@@ -15,32 +15,30 @@ const questions = [
 let userAnswers = new Array(questions.length).fill(null);
 let current = 0; // Index de la question actuelle
 
-// Récupération des nouveaux éléments HTML (y compris le bouton Précédent)
+// Récupération des éléments du DOM
 const quizDiv = document.getElementById("quiz");
 const nextBtn = document.getElementById("next");
-const prevBtn = document.getElementById("prev"); // NOUVEAU
+const prevBtn = document.getElementById("prev");
 const scoreText = document.getElementById("score");
-const navContainer = document.getElementById("navigation-buttons"); // NOUVEAU
+const navContainer = document.getElementById("navigation-buttons");
 
 // Affiche la question actuelle et met à jour l'état de la navigation
 function showQuestion() {
   const q = questions[current];
   
-  // 1. Générer le HTML de la question et des options
+  // 1. Générer le HTML de la question et des options (tuiles)
   quizDiv.innerHTML = `<h2>${q.question}</h2>` + 
     q.options.map((opt, i) => 
       // Ajout de la classe 'selected' si cette option a déjà été choisie
-      // Utilisation d'un attribut data-index pour récupérer l'index de l'option
       `<button class="option-btn ${userAnswers[current] === i ? 'selected' : ''}" data-index="${i}">${opt}</button>`
     ).join("");
 
-  // 2. Mettre à jour les boutons de navigation et le texte de score/progression
+  // 2. Mettre à jour les boutons de navigation et le texte de progression
   updateNavigation();
   updateScoreText();
 
-  // 3. Ajouter les écouteurs d'événements aux options
+  // 3. Ajouter les écouteurs d'événements aux nouvelles options
   document.querySelectorAll('.option-btn').forEach(button => {
-    // Utiliser un écouteur d'événement au lieu de onclick dans le HTML pour plus de propreté
     button.addEventListener('click', function() {
       const selectedIndex = parseInt(this.getAttribute('data-index'));
       selectAnswer(selectedIndex);
@@ -53,12 +51,12 @@ function selectAnswer(selectedIndex) {
   // 1. Enregistrer la réponse dans l'historique
   userAnswers[current] = selectedIndex;
   
-  // 2. Mettre à jour visuellement le choix (retirer la sélection précédente et ajouter la nouvelle)
+  // 2. Mettre à jour visuellement le choix
   document.querySelectorAll('.option-btn').forEach(btn => btn.classList.remove('selected'));
   document.querySelector(`.option-btn[data-index="${selectedIndex}"]`).classList.add('selected');
 }
 
-// Met à jour l'affichage des boutons (Précédent/Suivant) et gère la fin du quiz
+// Met à jour l'affichage des boutons (Précédent/Suivant)
 function updateNavigation() {
   // Le bouton Précédent est caché sur la première question
   prevBtn.style.display = current === 0 ? "none" : "inline-block";
@@ -67,16 +65,20 @@ function updateNavigation() {
   if (current === questions.length) {
     navContainer.style.display = "none";
   } else {
-    // Affiche le bouton "Terminer le Quiz" sur la dernière question, sinon "Suivant"
     navContainer.style.display = "block";
+    // Mettre à jour le texte du bouton Suivant (Terminer ou Suivant)
     nextBtn.textContent = current === questions.length - 1 ? "Terminer le Quiz" : "Suivant";
   }
 }
 
-// Affiche la progression (Question X/Y)
+// Affiche la progression (Question X/Y) ou le score final
 function updateScoreText() {
     if (current < questions.length) {
         scoreText.textContent = `Question ${current + 1}/${questions.length}`;
+        scoreText.style.display = "block";
+    } else {
+        // Le score final est affiché par endQuiz(), mais nous assurons que le texte est visible
+        scoreText.style.display = "block";
     }
 }
 
@@ -91,40 +93,77 @@ function calculateScore() {
   return finalScore;
 }
 
-// Gère l'affichage des résultats finaux (avec le GIF si vous l'ajoutez)
-function endQuiz() {
-  const finalScore = calculateScore();
-  const totalQuestions = questions.length;
+// --- NOUVELLE FONCTION POUR LE RETOUR À LA RÉVISION ---
+function startReview() {
+  // Définir l'index pour revenir à la première question
+  current = 0; 
+  // Rétablit le contenu du conteneur de navigation aux boutons standard
+  navContainer.innerHTML = `<button id="prev">Précédent</button><button id="next">Suivant</button>`;
   
-  quizDiv.innerHTML = `<h2>Quiz terminé !</h2>`;
-  scoreText.textContent = `Score final : ${finalScore}/${totalQuestions}`;
+  // Les écouteurs d'événements doivent être réattachés aux nouveaux boutons
+  document.getElementById("prev").addEventListener("click", handlePrevClick);
+  document.getElementById("next").addEventListener("click", handleNextClick);
   
-  updateNavigation(); // Cache les boutons de navigation
+  // Afficher la première question
+  showQuestion();
 }
 
 
-// --- ÉCOUTEURS D'ÉVÉNEMENTS DE NAVIGATION ---
+// Gère l'affichage des résultats finaux (avec le GIF si parfait)
+function endQuiz() {
+  const finalScore = calculateScore();
+  const totalQuestions = questions.length;
+  let quizResultHTML = "";
+  
+  if (finalScore === totalQuestions) {
+    // Si le score est parfait
+    quizResultHTML = `
+      <h2>Félicitations ! 🎉</h2>
+      <p>Vous avez un score parfait ! ( ${finalScore}/${totalQuestions} )</p>
+      <img src="https://media.tenor.com/tC7I0Q-kUkwAAAAd/damana.gif" alt="Chat qui tape du poing" style="width: 150px; margin-top: 20px; border-radius: 8px;">
+    `;
+  } else {
+    // Si le score n'est pas parfait
+    quizResultHTML = `
+      <h2>Quiz terminé !</h2>
+      <p>Continuez à réviser !</p>
+      <p style="margin-top: 15px;">Votre score : ${finalScore}/${totalQuestions}</p>
+    `;
+  }
+  
+  quizDiv.innerHTML = quizResultHTML;
+  scoreText.textContent = `Score final : ${finalScore}/${totalQuestions}`;
+  
+  // Remplacer les boutons de navigation par le bouton de révision
+  navContainer.innerHTML = `<button id="review-btn" onclick="startReview()">Revoir mes réponses</button>`;
+  navContainer.style.display = "block"; 
+}
 
-// Événement pour le bouton Précédent
-prevBtn.addEventListener("click", () => {
+
+// --- ÉCOUTEURS D'ÉVÉNEMENTS DE NAVIGATION (Fonctions nommées pour réutilisation) ---
+
+function handlePrevClick() {
   if (current > 0) {
     current--;
     showQuestion();
   }
-});
+}
 
-// Événement pour le bouton Suivant (ou Terminer)
-nextBtn.addEventListener("click", () => {
+function handleNextClick() {
   if (current < questions.length - 1) {
     current++;
     showQuestion();
   } else if (current === questions.length - 1) {
     // Si c'est la dernière question
-    current++; // On passe à l'état de fin de quiz
+    current++; 
     endQuiz();
   }
-});
+}
+
+// Attacher les écouteurs au démarrage
+document.getElementById("prev").addEventListener("click", handlePrevClick);
+document.getElementById("next").addEventListener("click", handleNextClick);
 
 
-// Démarrer le quiz
+// Démarrer le quiz au chargement de la page
 showQuestion();
