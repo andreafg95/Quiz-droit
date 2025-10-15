@@ -1,70 +1,126 @@
+/* --- Styles Généraux --- */
+
 body {
-  font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Police moderne */
+  background: #e9eef2; /* Arrière-plan très clair et doux */
   text-align: center;
   padding: 20px;
+  color: #333;
 }
+
+h1 {
+  color: #1a1a1a;
+  margin-bottom: 30px;
+}
+
+/* --- Conteneur du Quiz --- */
 
 #quiz {
   background: white;
-  border-radius: 10px;
-  padding: 20px;
-  margin: 20px auto;
-  max-width: 500px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 15px; /* Coins bien arrondis */
+  padding: 30px;
+  margin: 30px auto;
+  max-width: 650px; /* Largeur pour les options */
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1); /* Ombre douce et nette */
+  text-align: left; /* Aligner le contenu du quiz à gauche */
 }
 
-button {
-  background: #007BFF;
+/* Style du titre de la question */
+#quiz h2 {
+  font-size: 1.5em;
+  margin-bottom: 25px;
+  text-align: center; /* Centrer la question */
+}
+
+/* --- Style des Options de Réponse (Tuiles) --- */
+
+#quiz button {
+  display: block;        /* Chaque option sur sa propre ligne (tuiles empilées) */
+  width: 100%;           /* Occupe toute la largeur du conteneur */
+  margin: 10px 0;        /* Espacement vertical entre les tuiles */
+  padding: 15px 20px;    /* Augmentation de la zone cliquable */
+  
+  /* Apparence */
+  background: white;     /* Fond blanc */
+  color: #34495E;        /* Texte gris foncé */
+  font-size: 1em;
+  text-align: left;      /* Texte aligné à gauche */
+  border: 1px solid #CED4DA; /* Bordure légère et grise */
+  border-radius: 6px;    /* Coins légèrement arrondis */
+  cursor: pointer;
+  
+  /* Retrait des styles globaux pour les boutons d'options */
+  box-shadow: none;
+  
+  /* Transition fluide pour les effets */
+  transition: all 0.2s ease;
+}
+
+/* Effet de survol (Hover) sur les tuiles */
+#quiz button:hover {
+  background: #F8F9FA;      /* Très léger changement d'arrière-plan */
+  border-color: #007BFF;    /* Accent bleu au survol */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre très subtile */
+  transform: none;          /* Pas de soulèvement */
+}
+
+/* Style pour l'option précédemment choisie (classe ajoutée par JS) */
+#quiz button.selected {
+  background: #EAF2F8; /* Fond légèrement bleuté */
+  border-color: #007BFF; /* Bordure bleue pour indiquer la sélection */
+  box-shadow: 0 0 0 2px #EAF2F8, 0 2px 5px rgba(0, 0, 0, 0.1); /* Ombre améliorée */
+  font-weight: bold; /* Texte en gras */
+}
+
+/* Effet de clic (Active/Enfoncé) sur les tuiles */
+#quiz button:active {
+  background: #EAF2F8;
+  border-color: #0056b3;
+}
+
+/* --- Styles de Navigation Précédent/Suivant --- */
+
+#navigation-buttons {
+  max-width: 650px;
+  margin: 20px auto;
+  text-align: right; /* Aligne les boutons à droite sous le quiz */
+  padding: 0 30px;
+}
+
+/* Style par défaut pour les boutons de navigation */
+#navigation-buttons button {
+    /* Réinitialise le style des tuiles pour les boutons Précédent/Suivant */
+    display: inline-block;
+    width: auto;
+    margin: 0;
+    font-size: 1em;
+    font-weight: 600;
+    padding: 12px 25px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+    box-shadow: none;
+    text-align: center;
+}
+
+/* Style du bouton Précédent */
+#prev {
+  background: #6C757D; /* Gris */
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  cursor: pointer;
 }
 
-button {
-  /* Affichage en ligne */
-  display: inline-block; /* Permet aux boutons d'être côte à côte */
-  width: 48%;            /* Prend presque la moitié de la largeur du conteneur, laissant de l'espace */
-  
-  /* Retirer le margin-top qui peut créer trop d'espace pour des boutons côte à côte */
-  margin: 10px 1%;       /* Espacement horizontal entre les boutons */
-  
-  /* Mise en forme de base (similaire à ce que nous avions, mais adapté) */
-  padding: 15px 20px;    
-  background: #EBF5FF;   /* Fond bleu très clair, ou #F7F9FA pour presque blanc */
-  color: #007BFF;        /* Texte bleu clair (ou #34495E pour gris foncé) */
-  font-size: 17px;
-  font-weight: 600;      /* Texte un peu plus épais */
-  text-align: center;    /* Centrer le texte dans le bouton */
-  border: 2px solid #007BFF; /* Bordure plus visible et colorée */
-  border-radius: 12px;   /* Coins bien arrondis */
-  cursor: pointer;
-  
-  /* Transition pour la douceur des effets */
-  transition: all 0.3s ease;
-  
-  /* Ombre subtile */
-  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.1); /* Ombre douce et bleue */
+#prev:hover {
+  background: #5A6268; /* Gris plus foncé au survol */
 }
 
-/* Effet de survol (Hover) */
-#quiz button:hover {
-  background: #007BFF;      /* Fond bleu au survol */
-  color: white;             /* Texte blanc au survol */
-  border-color: #0056b3;    /* Bordure bleu foncé */
-  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.25); /* Ombre légèrement plus prononcée */
-  transform: translateY(-2px); /* Léger soulèvement */
+/* Style du bouton Suivant (Next) */
+#next {
+  background: #007BFF; /* Bleu vif pour l'action principale */
+  color: white;
+  border: none;
+  margin-left: 10px; /* Espace entre Précédent et Suivant */
 }
 
-/* Effet de clic (Active/Enfoncé) */
-#quiz button:active {
-  background: #0056b3;      /* Bleu plus foncé au clic */
-  transform: translateY(0); /* Retour à la position normale */
-  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.1); /* Ombre réduite */
-}
-
-button:hover {
+#next:hover {
   background: #0056b3;
 }
