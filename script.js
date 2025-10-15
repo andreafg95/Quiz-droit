@@ -127,7 +127,7 @@ function startReview() {
   showQuestion();
 }
 
-// Gère l'affichage des résultats finaux (avec le GIF systématique)
+// Gère l'affichage des résultats finaux (avec le Nyan Cat systématique)
 function endQuiz() {
   const finalScore = calculateScore();
   const totalQuestions = questions.length;
@@ -136,25 +136,25 @@ function endQuiz() {
     ? "Félicitations ! 🎉" 
     : "Quiz terminé !";
     
-  // Utilisation d'un GIF Giphy plus fiable pour la démo, au cas où Tenor serait bloqué
-  const gifUrl = "https://media.tenor.com/tC7I0Q-kUkwAAAAd/damana.gif";
-    
+  // Utilisez un lien direct vers le Nyan Cat
+  const nyanCatGifUrl = "https://media.giphy.com/media/RkMZTfC1rhdMk/giphy.gif"; 
+  // Ce lien Giphy est généralement plus stable pour l'affichage direct.
+
   quizDiv.innerHTML = `
     <h2>${message}</h2>
     <p>Votre score final : ${finalScore}/${totalQuestions}</p>
     
-    <img src="${gifUrl}" alt="Chat qui tape du poing" style="width: 150px; margin: 20px auto 10px auto; border-radius: 8px;">
+    <img src="${nyanCatGifUrl}" alt="Nyan Cat" style="width: 150px; margin: 20px auto 10px auto; border-radius: 8px;">
     
-    <p>${finalScore === totalQuestions ? 'Incroyable, vous avez un score parfait !' : 'Continuez à réviser pour maîtriser le droit des contrats !'}</p>
+    <p>${finalScore === totalQuestions ? 'Incroyable, vous avez un score parfait !' : 'Continuez de réviser pour maîtriser le droit des contrats !'}</p>
   `;
   
-  scoreText.textContent = ''; // Cache le texte de progression
+  scoreText.textContent = ''; // Nettoyer le texte de progression
 
   // Remplacer les boutons de navigation par le bouton de révision
   navContainer.innerHTML = `<button id="review-btn" onclick="startReview()">Revoir mes réponses</button>`;
   navContainer.style.display = "block"; 
 }
-
 
 // --- ATTACHEMENT INITIAL DES ÉCOUTEURS ---
 document.getElementById("prev").addEventListener("click", handlePrevClick);
